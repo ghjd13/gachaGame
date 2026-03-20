@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/lobby_bg"
+    tools:context=".MainActivity">
+
+    <!-- 1. 캐릭터 이미지 (나중에 코드로 변경할 영역) -->
+
+    <!-- ==================== [좌측 상단 프로필 영역] ==================== -->
+
+    <!-- 2. 레벨 동그라미 영역 -->
+    <ImageView
+        android:id="@+id/img_character"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="60dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/character_1_ld"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:src="@drawable/character_1_ld" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_level"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/circle_border"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_level_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="60"
+            android:textColor="#FFFFFF"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_level_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/tv_level_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LV"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_level_number" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- 3. 닉네임 영역 -->
+    <TextView
+        android:id="@+id/tv_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="닉네임여덟글자"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/divider_line"
+        app:layout_constraintStart_toEndOf="@+id/layout_level" />
+
+    <!-- 닉네임 아래 얇은 선 -->
+    <View
+        android:id="@+id/divider_line"
+        android:layout_width="160dp"
+        android:layout_height="1dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="@+id/layout_level"
+        app:layout_constraintStart_toStartOf="@+id/tv_nickname"
+        app:layout_constraintTop_toTopOf="@+id/layout_level" />
+
+    <!-- ==================== [UID 영역 분리] ==================== -->
+    <!-- UID 라벨 (UID:) -->
+    <TextView
+        android:id="@+id/tv_uid_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="UID:"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/tv_nickname"
+        app:layout_constraintTop_toBottomOf="@+id/divider_line" />
+
+    <!-- UID 실제 번호 -->
+    <TextView
+        android:id="@+id/tv_uid_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:text="12345678"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/tv_uid_label"
+        app:layout_constraintTop_toBottomOf="@+id/divider_line" />
+
+
+    <!-- ==================== [우측 메뉴 버튼 영역] ==================== -->
+
+    <ImageView
+        android:id="@+id/btn_battle"
+        android:layout_width="160dp"
+        android:layout_height="105dp"
+        android:layout_marginEnd="180dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/lobby_btn_battle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/img_character" />
+
+    <ImageView
+        android:id="@+id/btn_formation"
+        android:layout_width="70dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/lobby_btn_formation"
+        app:layout_constraintStart_toEndOf="@+id/btn_battle"
+        app:layout_constraintTop_toTopOf="@+id/btn_battle" />
+
+    <ImageView
+        android:id="@+id/btn_summon"
+        android:layout_width="160dp"
+        android:layout_height="105dp"
+        android:layout_marginTop="30dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/lobby_btn_summon"
+        app:layout_constraintEnd_toEndOf="@+id/btn_formation"
+        app:layout_constraintTop_toBottomOf="@+id/btn_battle" />
+
+    <ImageView
+        android:id="@+id/btn_shop"
+        android:layout_width="70dp"
+        android:layout_height="85dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="32dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/lobby_btn_store"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_summon"
+        app:layout_constraintEnd_toStartOf="@+id/btn_summon"
+        app:layout_constraintStart_toStartOf="@+id/btn_battle" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
