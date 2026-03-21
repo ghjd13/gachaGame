@@ -27,6 +27,14 @@
             android:screenOrientation="landscape"/>
         <activity android:name=".SummonResultActivity"
             android:screenOrientation="landscape"/>
+        <activity
+            android:name=".StageActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".BattleActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

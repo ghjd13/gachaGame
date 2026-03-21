@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnBattle.setOnClickListener {
             val intent = Intent(this, LoadingActivity::class.java)
-            intent.putExtra("DESTINATION", "BATTLE")
+            intent.putExtra("DESTINATION", "STAGE")
             startActivity(intent)
         }
     }

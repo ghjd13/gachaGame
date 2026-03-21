@@ -54,13 +54,16 @@ class LoadingActivity : AppCompatActivity() {
             // 목적지에 따라 다음 화면으로 넘어갑니다.
             when (destination) {
                 "SUMMON" -> {
-                     val nextIntent = Intent(this, SummonActivity::class.java)
-                     startActivity(nextIntent)
+                    val nextIntent = Intent(this, SummonActivity::class.java)
+                    startActivity(nextIntent)
+                }
+                "STAGE" -> {
+                    val nextIntent = Intent(this, StageActivity::class.java)
+                    startActivity(nextIntent)
                 }
                 "BATTLE" -> {
-                    // TODO: 전투 화면(BattleActivity)을 만들면 주석을 해제하세요!
-                    // val nextIntent = Intent(this, BattleActivity::class.java)
-                    // startActivity(nextIntent)
+                    val nextIntent = Intent(this, BattleActivity::class.java)
+                    startActivity(nextIntent)
                 }
             }
 
