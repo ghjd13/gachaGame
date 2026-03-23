@@ -28,56 +28,31 @@
             android:layout_marginEnd="8dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
-            <!-- 코스트 (별 5개, 왼쪽 정렬) -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@android:drawable/btn_star_big_on"
-                    app:tint="#FFFFFF" />
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@android:drawable/btn_star_big_on"
-                    app:tint="#FFFFFF" />
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@android:drawable/btn_star_big_off"
-                    app:tint="#757575" />
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@android:drawable/btn_star_big_off"
-                    app:tint="#757575" />
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@android:drawable/btn_star_big_off"
-                    app:tint="#757575" />
+                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@android:drawable/btn_star_big_on" app:tint="#FFFFFF" />
+                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@android:drawable/btn_star_big_on" app:tint="#FFFFFF" />
+                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@android:drawable/btn_star_big_off" app:tint="#757575" />
+                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@android:drawable/btn_star_big_off" app:tint="#757575" />
+                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@android:drawable/btn_star_big_off" app:tint="#757575" />
             </LinearLayout>
-            <!-- 체력바 -->
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="80dp"
                 android:layout_height="10dp"
                 android:progress="100"
                 android:progressTint="#FFFFFF" />
-            <!-- 캐릭터 이미지 -->
+
+            <!-- 코틀린에서 접근하기 위해 ID 추가됨 -->
             <ImageView
+                android:id="@+id/iv_ally_1"
                 android:layout_width="100dp"
                 android:layout_height="130dp"
                 android:layout_marginTop="4dp"
-                
+               
                 android:scaleType="fitCenter"
                 android:src="@drawable/character_1_ld" />
         </LinearLayout>
@@ -89,44 +64,17 @@
             android:layout_marginEnd="8dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
-            <!-- 코스트 (별 5개, 왼쪽 정렬) -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@android:drawable/btn_star_big_on"
-                    app:tint="#FFFFFF" />
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@android:drawable/btn_star_big_on"
-                    app:tint="#FFFFFF" />
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@android:drawable/btn_star_big_off"
-                    app:tint="#757575" />
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@android:drawable/btn_star_big_off"
-                    app:tint="#757575" />
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@android:drawable/btn_star_big_off"
-                    app:tint="#757575" />
+                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@android:drawable/btn_star_big_on" app:tint="#FFFFFF" />
+                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@android:drawable/btn_star_big_on" app:tint="#FFFFFF" />
+                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@android:drawable/btn_star_big_off" app:tint="#757575" />
+                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@android:drawable/btn_star_big_off" app:tint="#757575" />
+                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@android:drawable/btn_star_big_off" app:tint="#757575" />
             </LinearLayout>
-
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="80dp"
@@ -134,7 +82,9 @@
                 android:progress="70"
                 android:progressTint="#FFFFFF" />
 
+            <!-- 코틀린에서 접근하기 위해 ID 추가됨 -->
             <ImageView
+                android:id="@+id/iv_ally_2"
                 android:layout_width="100dp"
                 android:layout_height="130dp"
                 android:layout_marginTop="4dp"
@@ -148,44 +98,17 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical">
-            <!-- 코스트 (별 5개, 왼쪽 정렬) -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@android:drawable/btn_star_big_on"
-                    app:tint="#FFFFFF" />
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@android:drawable/btn_star_big_on"
-                    app:tint="#FFFFFF" />
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@android:drawable/btn_star_big_on"
-                    app:tint="#FFFFFF" />
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@android:drawable/btn_star_big_off"
-                    app:tint="#757575" />
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@android:drawable/btn_star_big_off"
-                    app:tint="#757575" />
+                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@android:drawable/btn_star_big_on" app:tint="#FFFFFF" />
+                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@android:drawable/btn_star_big_on" app:tint="#FFFFFF" />
+                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@android:drawable/btn_star_big_on" app:tint="#FFFFFF" />
+                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@android:drawable/btn_star_big_off" app:tint="#757575" />
+                <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@android:drawable/btn_star_big_off" app:tint="#757575" />
             </LinearLayout>
-
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="80dp"
@@ -193,11 +116,13 @@
                 android:progress="40"
                 android:progressTint="#FFFFFF" />
 
+            <!-- 코틀린에서 접근하기 위해 ID 추가됨 -->
             <ImageView
+                android:id="@+id/iv_ally_3"
                 android:layout_width="100dp"
                 android:layout_height="130dp"
                 android:layout_marginTop="4dp"
-                
+               
                 android:scaleType="fitCenter"
                 android:src="@drawable/character_1_ld" />
         </LinearLayout>
@@ -241,7 +166,7 @@
         android:layout_width="wrap_content"
         android:layout_height="160dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="-5dp"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:gravity="bottom"
