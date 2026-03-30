@@ -174,34 +174,38 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_next_turn">
 
-        <!-- 카드 1 (ImageView로 변경) -->
-        <ImageView
+        <!-- 카드 1 (GameCardView로 변경) -->
+        <com.example.gachagame.GameCardView
             android:id="@+id/card1"
             android:layout_width="80dp"
             android:layout_height="120dp"
             android:layout_marginEnd="8dp"
-            android:background="#B3E5FC"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher_foreground" />
+            app:cardCostValue="3"
+            app:cardCostColor="#FF0000"
+            app:cardNameText="파이어볼"
+            app:cardImageSrc="@drawable/ic_launcher_foreground"
+            tools:ignore="MissingClass" />
 
-        <!-- 카드 2 (ImageView로 변경) -->
-        <ImageView
+        <!-- 카드 2 (GameCardView로 변경) -->
+        <com.example.gachagame.GameCardView
             android:id="@+id/card2"
             android:layout_width="80dp"
             android:layout_height="120dp"
             android:layout_marginEnd="8dp"
-            android:background="#4FC3F7"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher_foreground" />
+            app:cardCostValue="5"
+            app:cardCostColor="#0000FF"
+            app:cardNameText="얼음 화살"
+            app:cardImageSrc="@drawable/ic_launcher_foreground" />
 
-        <!-- 카드 3 (ImageView로 변경) -->
-        <ImageView
+        <!-- 카드 3 (GameCardView로 변경) -->
+        <com.example.gachagame.GameCardView
             android:id="@+id/card3"
             android:layout_width="80dp"
             android:layout_height="120dp"
-            android:background="#0288D1"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher_foreground" />
+            app:cardCostValue="1"
+            app:cardCostColor="#008000"
+            app:cardNameText="회복"
+            app:cardImageSrc="@drawable/ic_launcher_foreground" />
     </LinearLayout>
 
     <!-- 다음 턴 버튼 -->
