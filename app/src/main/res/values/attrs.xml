@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Custom View가 사용할 XML Attribute들을 정의합니다. -->
+<resources>
+    <declare-styleable name="GameCardView">
+        <!-- 왼쪽 위 원 안에 들어갈 코스트 숫자 (default: 0) -->
+        <attr name="cardCostValue" format="integer" />
+        <!-- 코스트를 표시하는 원의 배경 색깔 (default: 파란색) -->
+        <attr name="cardCostColor" format="color" />
+        <!-- 카드의 이름 문자열 (default: "이름 없음") -->
+        <attr name="cardNameText" format="string" />
+        <!-- 카드 하단에 적힐 효과 설명 문자열 (default: 빈 문자열) -->
+        <attr name="cardDescriptionText" format="string" />
+        <!-- 카드 중앙 영역에 그려질 이미지 리소스 (default: 회색 빈 사각형) -->
+        <attr name="cardImageSrc" format="reference" />
+    </declare-styleable>
+</resources>
