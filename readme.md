@@ -6,13 +6,9 @@ Upon the World's Trace
 https://github.com/ghjd13/gachaGame
 
 ## README.md 에 대한 링크
-
+https://github.com/ghjd13/gachaGame/blob/main/readme.md
 
 # 개발 범위
-
-수업 git repo 의 readme 에 있는, 이번학기에서 다루게 되는 것들을 참고하여 개발 범위를 정해주세요
-이번학기에 만들어 가는 framework 를 사용하는 것을 원칙으로 합니다. 안 사용해야 하는 사람은 개별면담 해주세요.
-발표 자료는 PPT 로 만들지 않고, 다음 모든 내용이 README.md 에 포함될 수 있도록 해주세요.
 
 ## 게임 컨셉
 모바일 게임의 장르 중 하나인 미소녀 수집 게임을 간단하게 구현하고
@@ -32,15 +28,13 @@ https://github.com/ghjd13/gachaGame
 ![가챠 화면](./docs/가챠화면.png)
 
 ## 개발 일정: 4월 6일에 시작하는 주를 1주차로 하여 8주간의 주단위 상세 개발 일정을 제시.
-1주차: xml 기반인 기존 개발 자료를 프레임워크로 포팅
-2주차: 기존에 만든 가챠 시스템 작동되는지 테스트, SD 캐릭터, 카드 리소스 제작
-3-4주차: 전투 시스템 구축
-5-6주차: 캐릭터 데이터 구축 및 연동
-7-8주차: 디버깅, 유지보수
+- 1주차: xml 기반인 기존 개발 자료를 프레임워크로 포팅
+- 2주차: 기존에 만든 가챠 시스템 작동되는지 테스트, SD 캐릭터, 카드 리소스 제작
+- 3-4주차: 전투 시스템 구축
+- 5-6주차: 캐릭터 데이터 구축 및 연동
+- 7-8주차: 디버깅, 유지보수
 
-발표 동영상의 길이는 1분 30초가 되게 해 주세요. 1분 20초보다 짧거나 1분 40초보다 길면 감점합니다.
+## Special Thanks
+# HOI4 Anime Mod - Upon the World's Trace 모드팀
+![모드팀](./docs/ModTeam.png)
 
-발표 내용은 README.md 에 모두 포함되어야 합니다.
-
-## 출처
-HOI4 Anime Mod - Upon the World's Trace
