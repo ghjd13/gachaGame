@@ -35,6 +35,6 @@ https://github.com/ghjd13/gachaGame/blob/main/readme.md
 - 7-8주차: 디버깅, 유지보수
 
 ## Special Thanks
-# HOI4 Anime Mod - Upon the World's Trace 모드팀
+### HOI4 Anime Mod - Upon the World's Trace 모드팀
 ![모드팀](./docs/ModTeam.png)
 
