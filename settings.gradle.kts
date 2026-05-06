@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "GachaGame"
 include(":app")
+include(":a2dg")
  

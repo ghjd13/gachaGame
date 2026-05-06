@@ -18,6 +18,7 @@ object CharacterDataManager {
     private const val PREFS_NAME = "gacha_prefs"
     private const val KEY_CHARACTERS_JSON = "characters_json"
 
+    private const val KEY_FORMATION = "formation_json"
     // Gson 마법사 객체 생성
     private val gson = Gson()
 
@@ -65,5 +66,30 @@ object CharacterDataManager {
 
         // 해당 아이디를 찾고, 있으면 획득 여부를 반환 (못 찾으면 기본값 false)
         return characterList.find { it.id == characterId }?.isAcquired ?: false
+    }
+    // ========================================================
+    // 5. 현재 편성된 캐릭터 ID 리스트 가져오기 (추가된 부분)
+    // ========================================================
+    fun getFormation(context: Context): List<Int> {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val jsonString = prefs.getString(KEY_FORMATION, null)
+
+        return if (jsonString != null) {
+            // 저장된 데이터가 있으면 리스트로 변환해서 반환
+            val type = object : TypeToken<List<Int>>() {}.type
+            gson.fromJson(jsonString, type)
+        } else {
+            // 저장된 데이터가 없으면 기본값(1, 2, 3번 캐릭터) 반환
+            listOf(1, 2, 3)
+        }
+    }
+
+    // ========================================================
+    // 6. 캐릭터 편성 저장하기 (나중에 편성 화면에서 사용)
+    // ========================================================
+    fun saveFormation(context: Context, formation: List<Int>) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val jsonString = gson.toJson(formation)
+        prefs.edit().putString(KEY_FORMATION, jsonString).apply()
     }
 }

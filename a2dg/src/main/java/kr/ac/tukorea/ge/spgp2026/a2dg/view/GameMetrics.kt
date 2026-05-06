@@ -5,8 +5,8 @@ import android.graphics.PointF
 import android.graphics.RectF
 import android.util.Log
 
-private const val DEFAULT_VIRTUAL_WIDTH = 900f
-private const val DEFAULT_VIRTUAL_HEIGHT = 1600f
+private const val DEFAULT_VIRTUAL_WIDTH = 1600f
+private const val DEFAULT_VIRTUAL_HEIGHT = 900f
 
 class GameMetrics {
     // 게임 안에서 공통으로 쓰는 가상 좌표계 크기이다.
