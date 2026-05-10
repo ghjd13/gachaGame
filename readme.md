@@ -47,12 +47,14 @@ https://github.com/ghjd13/gachaGame/blob/main/readme.md
 
 ## git commit 을 얼마나 자주 했는지 알 수 있는 자료 (github-insights-commits 포함)
 ![커밋](./docs/Commits.png) 
+
 프로젝트가 시작되기 전에 주로 커밋을 자주했고 1차 발표 이후에는 개인 사정 등으로 라이브러리 연동에만 집중
 
 목표가 변경되었다면 변경된 내용과 이유 (합당하지 않는 경우 감점)
 ## Activity 구성
 ## Scene 구성 및 전환 관계
 ![씬 목록](./docs/Scenelist.png)
+
 크게 세개의 씬으로 나뉘어짐, 로비, 가챠, 전투
 현재 전투를 제외한 두 씬은 사실상 완성
 로비를 통해서 가챠, 전투를 들어갈 수 있고 가챠에서 전투, 전투에서 가챠로 갈려면 반드시 로비씬을 통해야 함
