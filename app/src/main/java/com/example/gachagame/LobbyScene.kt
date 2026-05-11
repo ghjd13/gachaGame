@@ -53,7 +53,7 @@ class LobbyScene(gctx: GameContext, private val context: Context) : Scene(gctx) 
         world.add(background, Layer.BACKGROUND)
 
         val character = object : Sprite(gctx, characterResId) {
-            init { setCenterProportionalHeight(400f, screenH * 0.5f, 800f) }
+            init { setCenterProportionalHeight(400f, screenH * 0.6f, 800f) }
         }
         world.add(character, Layer.CHARACTER)
 

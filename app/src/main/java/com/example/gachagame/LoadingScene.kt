@@ -91,6 +91,6 @@ class LoadingScene(
         // 우측 하단에 Now Loading 텍스트 그리기
         val screenW = gctx.metrics.width
         val screenH = gctx.metrics.height
-        canvas.drawText("Now Loading...", screenW - 80f, screenH - 80f, textPaint)
+        canvas.drawText("Now Loading...", screenW - 80f, screenH - 40f, textPaint)
     }
 }

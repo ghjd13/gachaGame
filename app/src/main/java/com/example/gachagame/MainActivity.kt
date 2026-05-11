@@ -7,8 +7,8 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 class MainActivity : BaseGameActivity() {
 
     // 디버그 정보를 화면에 띄울지 여부 (필요에 따라 true/false 변경)
-    override val drawsDebugInfo = true
-    override val drawsFpsGraph = true
+    override val drawsDebugInfo = false
+    override val drawsFpsGraph = false
 
     // BaseGameActivity의 필수 구현 메서드: 첫 화면(Scene)을 무엇으로 할지 결정합니다.
     override fun createRootScene(gctx: GameContext): Scene {
