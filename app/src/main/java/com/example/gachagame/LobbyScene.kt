@@ -121,7 +121,7 @@ class LobbyScene(gctx: GameContext, private val context: Context) : Scene(gctx) 
             }
             if (btnBattle.isTouched(pos.x, pos.y)) {
                 context.startActivity(Intent(context, LoadingActivity::class.java).apply {
-                    putExtra("DESTINATION", "BATTLE")
+                    putExtra("DESTINATION", "STAGE")
                 })
                 return true
             }

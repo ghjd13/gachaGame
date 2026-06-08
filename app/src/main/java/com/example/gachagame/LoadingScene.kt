@@ -72,6 +72,10 @@ class LoadingScene(
                     val nextIntent = Intent(activity, SummonActivity::class.java)
                     activity.startActivity(nextIntent)
                 }
+                "STAGE" -> {
+                    val nextIntent = Intent(activity, StageActivity::class.java)
+                    activity.startActivity(nextIntent)
+                }
                 "BATTLE" -> {
                     // TODO: 나중에 BattleActivity 만드시면 주석 해제하세요!
                     // val nextIntent = Intent(activity, BattleActivity::class.java)
