@@ -185,7 +185,7 @@ class BattleScene(
 
         override fun draw(canvas: Canvas) {
             canvas.drawRect(0f, 0f, SCREEN_W, SCREEN_H, bgPaint)
-            canvas.drawRect(0f, SCREEN_H * 0.62f, SCREEN_W, SCREEN_H, seaPaint)
+            canvas.drawRect(0f, SCREEN_H * 0.3f, SCREEN_W, SCREEN_H, seaPaint)
 
             var x = -offset
             while (x < SCREEN_W) {
@@ -322,6 +322,7 @@ class BattleScene(
         val rect = RectF()
         private var vx = 0f
         private var vy = 0f
+        private var angleDegrees = 0f
         private val paint = Paint().apply {
             color = if (fromPlayer) Color.rgb(125, 245, 255) else Color.rgb(255, 210, 80)
             style = Paint.Style.FILL
@@ -334,18 +335,29 @@ class BattleScene(
         }
 
         override fun update(gctx: GameContext) {
-            aimAtCurrentTarget()
+            // 플레이어 탄일 때만 매 프레임 타겟을 다시 조준하여 유도탄처럼 동작하게 합니다.
+            if (fromPlayer) {
+                aimAtCurrentTarget()
+            }
+            angleDegrees = Math.toDegrees(atan2(vy.toDouble(), vx.toDouble())).toFloat()
+
             x += vx * gctx.frameTime
             y += vy * gctx.frameTime
             syncRect()
         }
 
         override fun draw(canvas: Canvas) {
+            canvas.save()
+
+            canvas.rotate(angleDegrees, x, y)
+
             if (fromPlayer) {
                 canvas.drawRoundRect(rect, 14f, 14f, paint)
             } else {
                 canvas.drawOval(rect, paint)
             }
+
+            canvas.restore()
         }
 
         private fun syncRect() {
@@ -413,9 +425,9 @@ class BattleScene(
         private const val SCREEN_W = 1600f
         private const val SCREEN_H = 900f
         private const val PLAYER_X = 210f
-        private const val PLAYER_HALF_W = 54f
-        private const val PLAYER_HALF_H = 38f
-        private const val PLAYER_HIT_HALF_W = 30f
+        private const val PLAYER_HALF_W = 38f
+        private const val PLAYER_HALF_H = 54f
+        private const val PLAYER_HIT_HALF_W = 22f
         private const val PLAYER_HIT_HALF_H = 22f
         private const val PLAYER_MAX_HP = 120
         private const val PLAYER_FIRE_INTERVAL = 0.42f
