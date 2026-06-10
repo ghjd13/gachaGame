@@ -9,6 +9,7 @@ import android.view.MotionEvent
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IGameObject
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.Scene
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.World
+import kr.ac.tukorea.ge.spgp2026.a2dg.util.Gauge // [추가] Gauge 클래스 임포트
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -398,14 +399,14 @@ class BattleScene(
             typeface = Typeface.DEFAULT_BOLD
             isAntiAlias = true
         }
-        private val hpBgPaint = Paint().apply {
-            color = Color.argb(180, 40, 40, 40)
-            style = Paint.Style.FILL
-        }
-        private val hpPaint = Paint().apply {
-            color = Color.rgb(80, 235, 130)
-            style = Paint.Style.FILL
-        }
+
+        // [수정] 업로드해주신 Gauge 클래스를 사용하여 체력바 객체 생성
+        // 오류의 원인이었던 thickness를 '가로 길이(320) 대비 비율'로 정확하게 설정했습니다.
+        private val hpGauge = Gauge(
+            thickness = 28f / 320f,
+            fgColor = Color.rgb(80, 235, 130),
+            bgColor = Color.argb(180, 40, 40, 40)
+        )
 
         override fun update(gctx: GameContext) {
         }
@@ -415,8 +416,11 @@ class BattleScene(
             canvas.drawText("ATK ${player.attackPower}  EVA ${(player.evasionRate * 100f).toInt()}%", 32f, 94f, textPaint)
 
             val hpRatio = if (PLAYER_MAX_HP == 0) 0f else player.hp / PLAYER_MAX_HP.toFloat()
-            canvas.drawRect(32f, 118f, 352f, 146f, hpBgPaint)
-            canvas.drawRect(32f, 118f, 32f + 320f * hpRatio, 146f, hpPaint)
+
+            // [수정] 직접 사각형을 2개 그리는 대신 hpGauge의 draw 함수를 호출
+            // x: 시작점(32), y: 중앙선 높이(118 + 14 = 132), scale: 가로길이(320)
+            hpGauge.draw(canvas, 32f, 132f, 320f, hpRatio)
+
             canvas.drawText("HP ${player.hp}/$PLAYER_MAX_HP", 370f, 145f, textPaint)
         }
     }
