@@ -29,6 +29,9 @@
             android:name=".StageActivity"
             android:screenOrientation="landscape"/>
         <activity
+            android:name=".BattleActivity"
+            android:screenOrientation="landscape"/>
+        <activity
             android:name=".SummonResultActivity"
             android:screenOrientation="landscape"
             android:configChanges="orientation|screenSize|keyboardHidden" />

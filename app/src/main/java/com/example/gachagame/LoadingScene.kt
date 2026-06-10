@@ -80,6 +80,13 @@ class LoadingScene(
                     // TODO: 나중에 BattleActivity 만드시면 주석 해제하세요!
                     // val nextIntent = Intent(activity, BattleActivity::class.java)
                     // activity.startActivity(nextIntent)
+                    val nextIntent = Intent(activity, BattleActivity::class.java).apply {
+                        putExtra(
+                            BattleActivity.KEY_STAGE_ID,
+                            activity.intent.getStringExtra(BattleActivity.KEY_STAGE_ID)
+                        )
+                    }
+                    activity.startActivity(nextIntent)
                 }
             }
 
