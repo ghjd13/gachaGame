@@ -31,8 +31,32 @@ class BattleScene(
     private var enemySpawnTimer = 0f
     private var playerFireTimer = 0f
 
+    private var spawnedEnemyCount = 0
+    private val maxEnemies: Int
+
     init {
-        world.add(BattleBackground(), Layer.BACKGROUND)
+        maxEnemies = when (stageId) {
+            "1-1" -> 10 // 1-1 스테이지는 10마리
+            "1-2" -> 20 // 1-2 스테이지는 20마리
+            "2-1" -> 30 // 2-1 스테이지는 30마리
+            else -> 10  // 그 외 기본값
+        }
+        // 1. 원경 (하늘) - 천천히 이동 (예: 속도 30f)
+        val skyBackground = kr.ac.tukorea.ge.spgp2026.a2dg.objects.HorzScrollBackground(
+            gctx,
+            R.drawable.bg_sky, // 투명 처리된 하늘 이미지
+            30f
+        )
+
+        // 2. 근경 (땅/바다) - 빠르게 이동 (예: 하늘보다 빠른 120f)
+        val groundBackground = kr.ac.tukorea.ge.spgp2026.a2dg.objects.HorzScrollBackground(
+            gctx,
+            R.drawable.bg_ground, // 투명 처리된 땅 이미지
+            120f
+        )
+
+        world.add(skyBackground, Layer.BACKGROUND)
+        world.add(groundBackground, Layer.BACKGROUND)
         world.add(player, Layer.PLAYER)
         world.add(hud, Layer.UI)
     }
@@ -41,9 +65,10 @@ class BattleScene(
         enemySpawnTimer += gctx.frameTime
         playerFireTimer += gctx.frameTime
 
-        if (enemySpawnTimer >= ENEMY_SPAWN_INTERVAL) {
+        if (enemySpawnTimer >= ENEMY_SPAWN_INTERVAL && spawnedEnemyCount < maxEnemies) {
             enemySpawnTimer = 0f
             spawnEnemy()
+            spawnedEnemyCount++
         }
 
         if (playerFireTimer >= PLAYER_FIRE_INTERVAL) {
@@ -53,6 +78,10 @@ class BattleScene(
 
         super.update(gctx)
         checkCollisions()
+
+        if (spawnedEnemyCount >= maxEnemies && world.objectsAt(Layer.ENEMY).isEmpty()) {
+            gctx.sceneStack.pop()
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -161,43 +190,6 @@ class BattleScene(
         return nearest
     }
 
-    private inner class BattleBackground : IGameObject {
-        private var offset = 0f
-        private val bgPaint = Paint().apply {
-            color = Color.rgb(15, 32, 56)
-            style = Paint.Style.FILL
-        }
-        private val seaPaint = Paint().apply {
-            color = Color.rgb(24, 92, 128)
-            style = Paint.Style.FILL
-        }
-        private val linePaint = Paint().apply {
-            color = Color.argb(90, 255, 255, 255)
-            strokeWidth = 3f
-        }
-        private val stopLinePaint = Paint().apply {
-            color = Color.argb(120, 255, 210, 80)
-            strokeWidth = 4f
-        }
-
-        override fun update(gctx: GameContext) {
-            offset = (offset + 90f * gctx.frameTime) % 160f
-        }
-
-        override fun draw(canvas: Canvas) {
-            canvas.drawRect(0f, 0f, SCREEN_W, SCREEN_H, bgPaint)
-            canvas.drawRect(0f, SCREEN_H * 0.3f, SCREEN_W, SCREEN_H, seaPaint)
-
-            var x = -offset
-            while (x < SCREEN_W) {
-                canvas.drawLine(x, SCREEN_H * 0.66f, x + 110f, SCREEN_H, linePaint)
-                x += 160f
-            }
-
-            canvas.drawLine(ENEMY_STOP_X, 0f, ENEMY_STOP_X, SCREEN_H, stopLinePaint)
-        }
-    }
-
     private inner class PlayerShip : IGameObject {
         var x = PLAYER_X
             private set
@@ -212,19 +204,15 @@ class BattleScene(
         val isAlive: Boolean
             get() = hp > 0
 
-        private val bodyPaint = Paint().apply {
-            color = Color.rgb(90, 200, 255)
-            style = Paint.Style.FILL
-            isAntiAlias = true
-        }
-        private val outlinePaint = Paint().apply {
-            color = Color.WHITE
-            style = Paint.Style.STROKE
-            strokeWidth = 4f
-            isAntiAlias = true
-        }
+        private val sprite = kr.ac.tukorea.ge.spgp2026.a2dg.objects.AnimSprite(
+            gctx = gctx,
+            resId = R.drawable.character_1_sd_move_sheet, // 3장을 가로로 합친 이미지
+            fps = 8f,      // 초당 8프레임 속도로 발 구르기
+            frameCount = 3 // 3칸으로 나뉘어 있는 시트임을 엔진에 알림
+        )
 
         init {
+            sprite.setSize(76f, 108f)
             syncRect()
         }
 
@@ -239,16 +227,20 @@ class BattleScene(
         }
 
         override fun update(gctx: GameContext) {
+            sprite.update(gctx)
         }
 
         override fun draw(canvas: Canvas) {
-            canvas.drawOval(rect, bodyPaint)
-            canvas.drawOval(rect, outlinePaint)
+            sprite.draw(canvas)
         }
 
         private fun syncRect() {
             rect.set(x - PLAYER_HALF_W, y - PLAYER_HALF_H, x + PLAYER_HALF_W, y + PLAYER_HALF_H)
             hitRect.set(x - PLAYER_HIT_HALF_W, y - PLAYER_HIT_HALF_H, x + PLAYER_HIT_HALF_W, y + PLAYER_HIT_HALF_H)
+
+            sprite.x = x
+            sprite.y = y
+            sprite.syncDstRect()
         }
     }
 
@@ -268,19 +260,15 @@ class BattleScene(
             get() = hp > 0
 
         private var fireTimer = Random.nextFloat() * ENEMY_FIRE_INTERVAL
-        private val bodyPaint = Paint().apply {
-            color = Color.rgb(255, 105, 105)
-            style = Paint.Style.FILL
-            isAntiAlias = true
-        }
-        private val outlinePaint = Paint().apply {
-            color = Color.WHITE
-            style = Paint.Style.STROKE
-            strokeWidth = 4f
-            isAntiAlias = true
-        }
+        private val sprite = kr.ac.tukorea.ge.spgp2026.a2dg.objects.AnimSprite(
+            gctx = gctx,
+            resId = R.drawable.enemy1_move_sheet,
+            fps = 8f,      // 애니메이션 속도
+            frameCount = 3 // 시트 칸 수 (3칸이면 3)
+        )
 
         init {
+            sprite.setSize(116f, 88f)
             syncRect()
         }
 
@@ -299,16 +287,20 @@ class BattleScene(
                 fireEnemyBullet(this)
             }
 
+            sprite.update(gctx)
             syncRect()
         }
 
         override fun draw(canvas: Canvas) {
-            canvas.drawRoundRect(rect, 24f, 24f, bodyPaint)
-            canvas.drawRoundRect(rect, 24f, 24f, outlinePaint)
+            sprite.draw(canvas)
         }
 
         private fun syncRect() {
             rect.set(x - ENEMY_HALF_W, y - ENEMY_HALF_H, x + ENEMY_HALF_W, y + ENEMY_HALF_H)
+
+            sprite.x = x
+            sprite.y = y
+            sprite.syncDstRect() //
         }
     }
 
