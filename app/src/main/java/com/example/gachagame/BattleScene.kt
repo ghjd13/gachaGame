@@ -146,6 +146,9 @@ class BattleScene(
             // [수정] ACTION_DOWN을 빼버려서, 버튼을 안 누른 상태에서 손가락을 처음 댔을 때 바로 이동하게 합니다.
             // 그리고 ACTION_MOVE로 캐릭터를 따라다니게 합니다.
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+                if (point.x > SCREEN_W - 250f) {
+                    return true
+                }
                 player.moveTo(point.y)
                 true
             }
