@@ -188,6 +188,8 @@ class BattleScene(
     private fun firePlayerBullet() {
         if (!player.isAlive) return
 
+        gctx.res.sound.playEffect(R.raw.sfx_character1_attack)
+
         val bullet = Bullet(
             x = player.x + 58f,
             y = player.y,
@@ -199,6 +201,8 @@ class BattleScene(
     }
 
     private fun fireEnemyBullet(enemy: EnemyShip) {
+        gctx.res.sound.playEffect(R.raw.sfx_enemy1_attack)
+
         val bullet = Bullet(
             x = enemy.x - 58f,
             y = enemy.y,
@@ -219,7 +223,15 @@ class BattleScene(
                 if (!enemy.isAlive) continue
                 if (RectF.intersects(bullet.rect, enemy.rect)) {
                     bullet.isActive = false
+
+                    // 💡 데미지를 입기 전 살아있었는지 상태 저장
+                    val wasAlive = enemy.isAlive
                     enemy.takeDamage(bullet.damage)
+
+                    // 💡 방금 데미지를 입고 죽었다면 폭발음 재생!
+                    if (wasAlive && !enemy.isAlive) {
+                        gctx.res.sound.playEffect(R.raw.sfx_explosion)
+                    }
                     break
                 }
             }
@@ -288,6 +300,8 @@ class BattleScene(
             get() = hp > 0
 
         fun heal(amount: Int) {
+            gctx.res.sound.playEffect(R.raw.sfx_character1_skill)
+
             hp = kotlin.math.min(PLAYER_MAX_HP, hp + amount)
         }
 
@@ -608,6 +622,18 @@ class BattleScene(
         override fun draw(canvas: Canvas) {
             canvas.drawBitmap(bitmap, null, dstRect, paint)
         }
+    }
+    override fun onEnter() {
+        gctx.res.sound.playMusic(R.raw.bgm_battle)
+    }
+    override fun onExit() {
+        gctx.res.sound.stopMusic()
+    }
+    override fun onPause() {
+        gctx.res.sound.pauseMusic()
+    }
+    override fun onResume() {
+        gctx.res.sound.resumeMusic()
     }
 
     companion object {

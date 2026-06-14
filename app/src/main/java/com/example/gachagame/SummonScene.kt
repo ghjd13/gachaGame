@@ -95,10 +95,15 @@ class SummonScene(gctx: GameContext, private val activity: Activity) : Scene(gct
     // 1. 터치 잠금용 변수 추가
     private var isTransitioning = false
 
-    // 2. 씬으로 다시 돌아왔을 때 잠금을 풀어줌
+    // SummonScene.kt 내부
+    override fun onEnter() { gctx.res.sound.playMusic(R.raw.bgm_summon) }
+    override fun onExit() { gctx.res.sound.stopMusic() }
+    override fun onPause() { gctx.res.sound.pauseMusic() }
+
     override fun onResume() {
         super.onResume()
         isTransitioning = false
+        gctx.res.sound.resumeMusic() // 👈 여기에 추가
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

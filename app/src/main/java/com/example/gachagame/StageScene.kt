@@ -168,7 +168,18 @@ class StageScene(
             canvas.drawText(label, cx, cy - textOffset, textPaint)
         }
     }
-
+    override fun onEnter() {
+        gctx.res.sound.playMusic(R.raw.bgm_stage)
+    }
+    override fun onExit() {
+        gctx.res.sound.stopMusic()
+    }
+    override fun onPause() {
+        gctx.res.sound.pauseMusic()
+    }
+    override fun onResume() {
+        gctx.res.sound.resumeMusic()
+    }
     companion object {
         private val titlePaint = Paint().apply {
             color = Color.WHITE

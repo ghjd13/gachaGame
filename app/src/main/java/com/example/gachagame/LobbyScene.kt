@@ -133,4 +133,16 @@ class LobbyScene(gctx: GameContext, private val context: Context) : Scene(gctx) 
         fun setup(cx: Float, cy: Float, w: Float, h: Float) { setCenter(cx, cy); setSize(w, h) }
         fun isTouched(tx: Float, ty: Float) = dstRect.contains(tx, ty)
     }
+    override fun onEnter() {
+        gctx.res.sound.playMusic(R.raw.bgm_lobby)
+    }
+    override fun onExit() {
+        gctx.res.sound.stopMusic()
+    }
+    override fun onPause() {
+        gctx.res.sound.pauseMusic()
+    }
+    override fun onResume() {
+        gctx.res.sound.resumeMusic()
+    }
 }
