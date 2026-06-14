@@ -9,6 +9,7 @@ import android.graphics.RectF
 import android.graphics.Typeface
 import android.view.MotionEvent
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IGameObject
+import kr.ac.tukorea.ge.spgp2026.a2dg.objects.Sprite
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.Scene
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.World
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
@@ -20,47 +21,19 @@ class StageScene(
     enum class Layer { BACKGROUND, UI }
     override val world = World(Layer.values())
 
-    private val stage11 =
-        StageButton(
-            500f,470f,
-            320f,120f,
-            "Stage 1-1",
-            "1-1"
-        )
-
-    private val stage12 =
-        StageButton(
-            800f,470f,
-            320f,120f,
-            "Stage 1-2",
-            "1-2"
-        )
-
-    private val stage13 =
-        StageButton(
-            1100f,470f,
-            320f,120f,
-            "Stage 1-3",
-            "1-3"
-        )
+    private val stage11 = StageButton(gctx, 700f, 320f, 480f, 120f, "Stage 1-1", "1-1")
+    private val stage12 = StageButton(gctx, 600f, 480f, 480f, 120f, "Stage 1-2", "1-2")
+    private val stage13 = StageButton(gctx, 500f, 640f, 480f, 120f, "Stage 1-3", "1-3")
 
     init {
-
         val screenW = 1600f
         val screenH = 900f
         gctx.metrics.setSize(screenW, screenH)
 
-        val background = object : IGameObject {
-            private val paint = Paint().apply {
-                color = Color.rgb(46, 46, 46)
-                style = Paint.Style.FILL
-            }
-
-            override fun update(gctx: GameContext) {
-            }
-
-            override fun draw(canvas: Canvas) {
-                canvas.drawRect(0f, 0f, screenW, screenH, paint)
+        val background = object : Sprite(gctx, R.drawable.bg_stage) {
+            init {
+                setCenter(screenW / 2, screenH / 2)
+                setSize(screenW, screenH)
             }
         }
 
@@ -72,7 +45,7 @@ class StageScene(
 
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
-        canvas.drawText("Stage Select", 800f, 210f, titlePaint)
+        canvas.drawText("Stage Select", 350f, 150f, titlePaint)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -116,6 +89,7 @@ class StageScene(
     }
 
     private class StageButton(
+        gctx: GameContext,
         private val cx: Float,
         private val cy: Float,
         private val width: Float,
@@ -129,20 +103,15 @@ class StageScene(
             cx + width / 2f,
             cy + height / 2f,
         )
-        private val fillPaint = Paint().apply {
-            color = Color.rgb(52, 152, 219)
-            isAntiAlias = true
-            style = Paint.Style.FILL
-        }
-        private val strokePaint = Paint().apply {
-            color = Color.WHITE
-            isAntiAlias = true
-            style = Paint.Style.STROKE
-            strokeWidth = 4f
-        }
+        // 리소스 매니저를 통해 stage_button 이미지 불러오기
+        private val bitmap = gctx.res.getBitmap(R.drawable.stage_button)
+
+        // 잠금/해금 상태에 따라 이미지 투명도를 조절할 페인트 객체
+        private val bitmapPaint = Paint().apply { isAntiAlias = true }
+
         private val textPaint = Paint().apply {
-            color = Color.WHITE
-            textSize = 48f
+            color = Color.DKGRAY // 밝은 하늘색 버튼에 어울리는 짙은 회색 텍스트
+            textSize = 44f
             textAlign = Paint.Align.CENTER
             typeface = Typeface.DEFAULT_BOLD
             isAntiAlias = true
@@ -160,12 +129,23 @@ class StageScene(
 
         override fun draw(canvas: Canvas) {
             val unlocked = StageManager.isUnlocked(stageId)
-            fillPaint.alpha = if (unlocked) 255 else 80
-            canvas.drawRoundRect(rect, 24f, 24f, fillPaint)
-            canvas.drawRoundRect(rect, 24f, 24f, strokePaint)
 
+            // 💡 잠긴 스테이지면 이미지 투명도를 낮춰서 비활성화된 느낌을 줍니다.
+            bitmapPaint.alpha = if (unlocked) 255 else 100
+
+            // 버튼 이미지 렌더링
+            canvas.drawBitmap(bitmap, null, rect, bitmapPaint)
+
+            // 버튼 위에 스테이지 텍스트 렌더링
             val textOffset = (textPaint.descent() + textPaint.ascent()) / 2f
             canvas.drawText(label, cx, cy - textOffset, textPaint)
+
+            // 잠긴 스테이지에 자물쇠 아이콘 대체 텍스트 표시
+            if (!unlocked) {
+                canvas.drawText("LOCKED", cx, cy + height/2f + 30f, Paint().apply {
+                    color = Color.GRAY; textSize = 24f; textAlign = Paint.Align.CENTER
+                })
+            }
         }
     }
     override fun onEnter() {

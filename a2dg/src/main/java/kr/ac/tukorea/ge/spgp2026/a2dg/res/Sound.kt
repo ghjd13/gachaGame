@@ -30,6 +30,7 @@ class Sound(
         stopMusic()
         mediaPlayer = MediaPlayer.create(appContext, resId).apply {
             isLooping = true
+            setVolume(BGM_VOLUME, BGM_VOLUME)
             start()
         }
     }
@@ -53,7 +54,7 @@ class Sound(
         val soundId = soundIds[resId] ?: pool.load(appContext, resId, PRIORITY).also {
             soundIds[resId] = it
         }
-        pool.play(soundId, VOLUME, VOLUME, PRIORITY, NO_LOOP, NORMAL_RATE)
+        pool.play(soundId, SFX_VOLUME, SFX_VOLUME, PRIORITY, NO_LOOP, NORMAL_RATE)
     }
 
     fun release() {
@@ -80,7 +81,9 @@ class Sound(
     companion object {
         private const val MAX_STREAMS = 3
         private const val PRIORITY = 1
-        private const val VOLUME = 1f
+
+        private const val BGM_VOLUME = 0.5f
+        private const val SFX_VOLUME = 0.3f
         private const val NO_LOOP = 0
         private const val NORMAL_RATE = 1f
     }
