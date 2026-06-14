@@ -7,6 +7,7 @@ import android.graphics.RectF
 import android.graphics.Typeface
 import android.view.MotionEvent
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IGameObject
+import kr.ac.tukorea.ge.spgp2026.a2dg.objects.Sprite
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.Scene
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.World
 import kr.ac.tukorea.ge.spgp2026.a2dg.util.Gauge // [추가] Gauge 클래스 임포트
@@ -22,6 +23,7 @@ class BattleScene(
     gctx: GameContext,
     private val stageId: String,
 ) : Scene(gctx) {
+    override val clipsRect = true
     enum class Layer { BACKGROUND, PLAYER_BULLET, ENEMY, ENEMY_BULLET, PLAYER, UI }
 
     override val world = World(Layer.values())
@@ -35,28 +37,34 @@ class BattleScene(
     private val maxEnemies: Int
 
     init {
+        val screenW = 1600f
+        val screenH = 900f
+        gctx.metrics.setSize(screenW, screenH)
+
         maxEnemies = when (stageId) {
             "1-1" -> 10 // 1-1 스테이지는 10마리
             "1-2" -> 20 // 1-2 스테이지는 20마리
             "2-1" -> 30 // 2-1 스테이지는 30마리
             else -> 10  // 그 외 기본값
         }
+
         // 1. 원경 (하늘) - 천천히 이동 (예: 속도 30f)
         val skyBackground = kr.ac.tukorea.ge.spgp2026.a2dg.objects.HorzScrollBackground(
             gctx,
             R.drawable.bg_sky, // 투명 처리된 하늘 이미지
-            30f
+            -30f
         )
 
         // 2. 근경 (땅/바다) - 빠르게 이동 (예: 하늘보다 빠른 120f)
         val groundBackground = kr.ac.tukorea.ge.spgp2026.a2dg.objects.HorzScrollBackground(
             gctx,
             R.drawable.bg_ground, // 투명 처리된 땅 이미지
-            120f
+            -120f
         )
 
         world.add(skyBackground, Layer.BACKGROUND)
         world.add(groundBackground, Layer.BACKGROUND)
+
         world.add(player, Layer.PLAYER)
         world.add(hud, Layer.UI)
     }
