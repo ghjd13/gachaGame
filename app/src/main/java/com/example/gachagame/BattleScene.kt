@@ -30,11 +30,31 @@ class BattleScene(
 
     private val player = PlayerShip()
     private val hud = BattleHud()
+    private val skillButton = SkillButton()
     private var enemySpawnTimer = 0f
     private var playerFireTimer = 0f
+    private val popupPaint = Paint().apply {
+        color = Color.argb(180, 0, 0, 0)
+    }
 
+    private val clearPaint = Paint().apply {
+        color = Color.WHITE
+        textSize = 90f
+        textAlign = Paint.Align.CENTER
+        typeface = Typeface.DEFAULT_BOLD
+        isAntiAlias = true
+    }
+
+    private val subPaint = Paint().apply {
+        color = Color.WHITE
+        textSize = 50f
+        textAlign = Paint.Align.CENTER
+        isAntiAlias = true
+    }
     private var spawnedEnemyCount = 0
+    private var stageCleared = false
     private val maxEnemies: Int
+
 
     init {
         val screenW = 1600f
@@ -67,6 +87,7 @@ class BattleScene(
 
         world.add(player, Layer.PLAYER)
         world.add(hud, Layer.UI)
+        world.add(skillButton, Layer.UI)
     }
 
     override fun update(gctx: GameContext) {
@@ -87,15 +108,44 @@ class BattleScene(
         super.update(gctx)
         checkCollisions()
 
-        if (spawnedEnemyCount >= maxEnemies && world.objectsAt(Layer.ENEMY).isEmpty()) {
-            gctx.sceneStack.pop()
+        if (spawnedEnemyCount >= maxEnemies &&
+            world.objectsAt(Layer.ENEMY).isEmpty()) {
+            stageCleared = true
         }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        val point = gctx.metrics.fromScreen(event.x, event.y)
+
+        if (stageCleared &&
+            event.actionMasked == MotionEvent.ACTION_DOWN) {
+
+            StageManager.clearStage(stageId)
+
+            android.util.Log.e(
+                "STAGE",
+                StageManager.clearedStages.toString()
+            )
+
+            gctx.sceneStack.pop()
+            return true
+        }
+        // 1. 버튼 터치 우선 검사
+        if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+            if (skillButton.isTouched(point.x, point.y)) {
+                if (skillButton.tryUse()) {
+                    player.heal((PLAYER_MAX_HP * 0.5f).toInt())
+                    world.add(SkillCutIn(), Layer.UI)
+                }
+                return true // 버튼 처리 완료. 여기서 리턴하므로 아래 코드로 절대 안 내려감.
+            }
+        }
+
+        // 2. 이동 로직: 버튼이 아닐 때만 실행
         return when (event.actionMasked) {
+            // [수정] ACTION_DOWN을 빼버려서, 버튼을 안 누른 상태에서 손가락을 처음 댔을 때 바로 이동하게 합니다.
+            // 그리고 ACTION_MOVE로 캐릭터를 따라다니게 합니다.
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
-                val point = gctx.metrics.fromScreen(event.x, event.y)
                 player.moveTo(point.y)
                 true
             }
@@ -103,9 +153,34 @@ class BattleScene(
             else -> super.onTouchEvent(event)
         }
     }
+    override fun draw(canvas: Canvas) {
+        super.draw(canvas)
+
+        if (stageCleared) {
+            popupPaint.color = Color.argb(180, 0, 0, 0)
+            canvas.drawRect(0f, 0f, SCREEN_W, SCREEN_H, popupPaint)
+
+            canvas.drawText(
+                "STAGE CLEAR!",
+                SCREEN_W / 2f,
+                SCREEN_H / 2f,
+                clearPaint
+            )
+
+            canvas.drawText(
+                "Tap Anywhere",
+                SCREEN_W / 2f,
+                SCREEN_H / 2f + 80f,
+                subPaint
+            )
+        }
+    }
 
     private fun spawnEnemy() {
-        val y = Random.nextFloat() * (SCREEN_H - ENEMY_MARGIN * 2f) + ENEMY_MARGIN
+        val minY = 300f
+        val maxY = SCREEN_H - ENEMY_MARGIN
+        val y = Random.nextFloat() * (maxY - minY) + minY
+
         val enemy = EnemyShip(SCREEN_W + 80f, y)
         world.add(enemy, Layer.ENEMY)
     }
@@ -212,6 +287,10 @@ class BattleScene(
         val isAlive: Boolean
             get() = hp > 0
 
+        fun heal(amount: Int) {
+            hp = kotlin.math.min(PLAYER_MAX_HP, hp + amount)
+        }
+
         private val sprite = kr.ac.tukorea.ge.spgp2026.a2dg.objects.AnimSprite(
             gctx = gctx,
             resId = R.drawable.character_1_sd_move_sheet, // 3장을 가로로 합친 이미지
@@ -225,7 +304,7 @@ class BattleScene(
         }
 
         fun moveTo(targetY: Float) {
-            y = targetY.coerceIn(PLAYER_HALF_H, SCREEN_H - PLAYER_HALF_H)
+            y = targetY.coerceIn(300f, SCREEN_H - PLAYER_HALF_H)
             syncRect()
         }
 
@@ -422,6 +501,112 @@ class BattleScene(
             hpGauge.draw(canvas, 32f, 132f, 320f, hpRatio)
 
             canvas.drawText("HP ${player.hp}/$PLAYER_MAX_HP", 370f, 145f, textPaint)
+        }
+    }
+
+    // 💡 [추가] 1:1 사이즈 스킬 아이콘 및 쿨타임 제어 클래스
+    private inner class SkillButton : IGameObject {
+        private val cx = SCREEN_W - 120f
+        private val cy = SCREEN_H - 120f
+        private val size = 160f // 1:1 비율 사이즈
+        private val rect = RectF(cx - size / 2f, cy - size / 2f, cx + size / 2f, cy + size / 2f)
+
+        private val bitmap = gctx.res.getBitmap(R.drawable.character_1_skill)
+        private val dstRect = RectF(rect)
+
+        // 쿨타임 중일 때 덮어씌울 반투명 검은색 막
+        private val dimPaint = Paint().apply {
+            color = Color.argb(180, 0, 0, 0)
+            style = Paint.Style.FILL
+        }
+        // 남은 시간 텍스트 페인트
+        private val textPaint = Paint().apply {
+            color = Color.WHITE
+            textSize = 50f
+            textAlign = Paint.Align.CENTER
+            typeface = Typeface.DEFAULT_BOLD
+            isAntiAlias = true
+        }
+
+        var cooldownTimer = 0f
+        val maxCooldown = 10f // 쿨타임 10초 (원하시는 대로 수정하세요)
+
+        fun isTouched(x: Float, y: Float) = rect.contains(x, y)
+
+        fun tryUse(): Boolean {
+            if (cooldownTimer <= 0f) {
+                cooldownTimer = maxCooldown
+                return true
+            }
+            return false
+        }
+
+        override fun update(gctx: GameContext) {
+            if (cooldownTimer > 0f) {
+                cooldownTimer -= gctx.frameTime
+            }
+        }
+
+        override fun draw(canvas: Canvas) {
+            canvas.drawBitmap(bitmap, null, dstRect, null) // 아이콘 그리기
+
+            if (cooldownTimer > 0f) {
+                canvas.drawRect(dstRect, dimPaint) // 반투명 막 씌우기
+                val textOffset = (textPaint.descent() + textPaint.ascent()) / 2f
+                val text = String.format("%.1f", cooldownTimer) // 소수점 1자리까지 표시
+                canvas.drawText(text, cx, cy - textOffset, textPaint)
+            }
+        }
+    }
+
+    // 💡 [추가] 중앙에서 좌측으로 미끄러지듯 나타나는 컷인 연출 클래스
+    private inner class SkillCutIn : IGameObject {
+        private val bitmap = gctx.res.getBitmap(R.drawable.character_1_ld)
+        private var time = 0f
+        private val duration = 1.5f // 총 연출 시간 1.5초
+        private val paint = Paint().apply { isAntiAlias = true }
+        private val dstRect = RectF()
+
+        // 화면 세로 크기(800f)에 맞춰 원본 비율대로 가로 길이 계산
+        private val h = 800f
+        private val w = bitmap.width * h / bitmap.height
+
+        private val startX = SCREEN_W / 2f // 시작 위치: 중앙
+        private val endX = SCREEN_W / 4f   // 멈추는 위치: 좌측
+        private val cy = SCREEN_H / 2f +100f
+
+        override fun update(gctx: GameContext) {
+            time += gctx.frameTime
+            if (time >= duration) {
+                world.remove(this, Layer.UI) // 연출이 끝나면 화면에서 삭제
+                return
+            }
+
+            val cx: Float
+            val alpha: Int
+
+            if (time < 0.3f) {
+                // 0 ~ 0.3초: 중앙에서 좌측으로 이동하며 점점 선명해짐 (투명도 0 -> 255)
+                val progress = time / 0.3f
+                cx = startX + (endX - startX) * progress
+                alpha = (255 * progress).toInt()
+            } else if (time > 1.2f) {
+                // 1.2 ~ 1.5초: 제자리에서 점점 투명해지며 사라짐 (투명도 255 -> 0)
+                val progress = (time - 1.2f) / 0.3f
+                cx = endX
+                alpha = (255 * (1f - progress)).toInt()
+            } else {
+                // 0.3 ~ 1.2초: 좌측에 멈춰서 완전히 선명한 상태 유지
+                cx = endX
+                alpha = 255
+            }
+
+            paint.alpha = alpha.coerceIn(0, 255) // 투명도 적용
+            dstRect.set(cx - w / 2f, cy - h / 2f, cx + w / 2f, cy + h / 2f)
+        }
+
+        override fun draw(canvas: Canvas) {
+            canvas.drawBitmap(bitmap, null, dstRect, paint)
         }
     }
 

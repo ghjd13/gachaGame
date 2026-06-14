@@ -20,9 +20,32 @@ class StageScene(
     enum class Layer { BACKGROUND, UI }
     override val world = World(Layer.values())
 
-    private val stageButton = StageButton(800f, 470f, 420f, 140f, "Stage 1-1")
+    private val stage11 =
+        StageButton(
+            500f,470f,
+            320f,120f,
+            "Stage 1-1",
+            "1-1"
+        )
+
+    private val stage12 =
+        StageButton(
+            800f,470f,
+            320f,120f,
+            "Stage 1-2",
+            "1-2"
+        )
+
+    private val stage13 =
+        StageButton(
+            1100f,470f,
+            320f,120f,
+            "Stage 1-3",
+            "1-3"
+        )
 
     init {
+
         val screenW = 1600f
         val screenH = 900f
         gctx.metrics.setSize(screenW, screenH)
@@ -42,7 +65,9 @@ class StageScene(
         }
 
         world.add(background, Layer.BACKGROUND)
-        world.add(stageButton, Layer.UI)
+        world.add(stage11, Layer.UI)
+        world.add(stage12, Layer.UI)
+        world.add(stage13, Layer.UI)
     }
 
     override fun draw(canvas: Canvas) {
@@ -56,10 +81,32 @@ class StageScene(
         }
 
         val point = gctx.metrics.fromScreen(event.x, event.y)
-        if (stageButton.isTouched(point.x, point.y)) {
+
+        if (stage11.isTouched(point.x, point.y)) {
+
             val intent = Intent(activity, LoadingActivity::class.java).apply {
                 putExtra("DESTINATION", "BATTLE")
                 putExtra("STAGE_ID", "1-1")
+            }
+            activity.startActivity(intent)
+            return true
+        }
+
+        else if (stage12.isTouched(point.x, point.y)) {
+
+            val intent = Intent(activity, LoadingActivity::class.java).apply {
+                putExtra("DESTINATION", "BATTLE")
+                putExtra("STAGE_ID", "1-2")
+            }
+            activity.startActivity(intent)
+            return true
+        }
+
+        else if (stage13.isTouched(point.x, point.y)) {
+
+            val intent = Intent(activity, LoadingActivity::class.java).apply {
+                putExtra("DESTINATION", "BATTLE")
+                putExtra("STAGE_ID", "1-3")
             }
             activity.startActivity(intent)
             return true
@@ -74,6 +121,7 @@ class StageScene(
         private val width: Float,
         private val height: Float,
         private val label: String,
+        private val stageId: String,
     ) : IGameObject {
         private val rect = RectF(
             cx - width / 2f,
@@ -101,6 +149,9 @@ class StageScene(
         }
 
         fun isTouched(x: Float, y: Float): Boolean {
+            if (!StageManager.isUnlocked(stageId)) {
+                return false
+            }
             return rect.contains(x, y)
         }
 
@@ -108,6 +159,8 @@ class StageScene(
         }
 
         override fun draw(canvas: Canvas) {
+            val unlocked = StageManager.isUnlocked(stageId)
+            fillPaint.alpha = if (unlocked) 255 else 80
             canvas.drawRoundRect(rect, 24f, 24f, fillPaint)
             canvas.drawRoundRect(rect, 24f, 24f, strokePaint)
 
