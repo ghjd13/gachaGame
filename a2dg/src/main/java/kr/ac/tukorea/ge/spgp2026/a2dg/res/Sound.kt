@@ -82,7 +82,7 @@ class Sound(
         private const val MAX_STREAMS = 3
         private const val PRIORITY = 1
 
-        private const val BGM_VOLUME = 0.5f
+        private const val BGM_VOLUME = 0.7f
         private const val SFX_VOLUME = 0.5f
         private const val NO_LOOP = 0
         private const val NORMAL_RATE = 1f
