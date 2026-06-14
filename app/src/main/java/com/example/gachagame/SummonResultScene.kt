@@ -97,6 +97,7 @@ class SummonResultScene(
 
             if (!isRevealed) {
                 isRevealed = true
+                gctx.res.sound.playEffect(R.raw.sfx_summon_result)
                 cardList.forEach { it.reveal() }
             } else {
                 activity.finish()
@@ -171,5 +172,22 @@ class SummonResultScene(
                 }
             }
         }
+    }
+    // 💡 [추가] 결과창 씬 전용 BGM 생명주기 관리
+    override fun onEnter() {
+        // 원하시는 결과창 브금 파일명으로 변경하세요
+        gctx.res.sound.playMusic(R.raw.bgm_summon_result)
+    }
+
+    override fun onExit() {
+        gctx.res.sound.stopMusic()
+    }
+
+    override fun onPause() {
+        gctx.res.sound.pauseMusic()
+    }
+
+    override fun onResume() {
+        gctx.res.sound.resumeMusic()
     }
 }

@@ -162,7 +162,7 @@ class StageScene(
     }
     companion object {
         private val titlePaint = Paint().apply {
-            color = Color.WHITE
+            color = Color.BLACK
             textSize = 64f
             textAlign = Paint.Align.CENTER
             typeface = Typeface.DEFAULT_BOLD
