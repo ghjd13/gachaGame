@@ -45,6 +45,14 @@ class BattleScene(
         isAntiAlias = true
     }
 
+    private val failPaint = Paint().apply {
+        color = Color.RED
+        textSize = 90f
+        textAlign = Paint.Align.CENTER
+        typeface = Typeface.DEFAULT_BOLD
+        isAntiAlias = true
+    }
+
     private val subPaint = Paint().apply {
         color = Color.WHITE
         textSize = 50f
@@ -53,6 +61,7 @@ class BattleScene(
     }
     private var spawnedEnemyCount = 0
     private var stageCleared = false
+    private var stageFailed = false
     private val maxEnemies: Int
 
 
@@ -108,8 +117,9 @@ class BattleScene(
         super.update(gctx)
         checkCollisions()
 
-        if (spawnedEnemyCount >= maxEnemies &&
-            world.objectsAt(Layer.ENEMY).isEmpty()) {
+        if (!player.isAlive && !stageCleared) {
+            stageFailed = true
+        } else if (spawnedEnemyCount >= maxEnemies && world.objectsAt(Layer.ENEMY).isEmpty() && !stageFailed) {
             stageCleared = true
         }
     }
@@ -117,16 +127,15 @@ class BattleScene(
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val point = gctx.metrics.fromScreen(event.x, event.y)
 
-        if (stageCleared &&
-            event.actionMasked == MotionEvent.ACTION_DOWN) {
+        if ((stageCleared || stageFailed) && event.actionMasked == MotionEvent.ACTION_DOWN) {
 
-            StageManager.clearStage(stageId)
+            // 클리어한 경우에만 다음 스테이지 해금 및 로그 출력
+            if (stageCleared) {
+                StageManager.clearStage(stageId)
+                android.util.Log.e("STAGE", StageManager.clearedStages.toString())
+            }
 
-            android.util.Log.e(
-                "STAGE",
-                StageManager.clearedStages.toString()
-            )
-
+            // 패배했든 승리했든 씬은 빠져나갑니다.
             gctx.sceneStack.pop()
             return true
         }
@@ -159,19 +168,23 @@ class BattleScene(
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
 
-        if (stageCleared) {
+        if (stageCleared || stageFailed) {
             popupPaint.color = Color.argb(180, 0, 0, 0)
             canvas.drawRect(0f, 0f, SCREEN_W, SCREEN_H, popupPaint)
 
+            // 상태에 따라 문구와 색상 결정
+            val titleText = if (stageCleared) "STAGE CLEAR!" else "MISSION FAILED"
+            val titlePaint = if (stageCleared) clearPaint else failPaint
+
             canvas.drawText(
-                "STAGE CLEAR!",
+                titleText,
                 SCREEN_W / 2f,
                 SCREEN_H / 2f,
-                clearPaint
+                titlePaint
             )
 
             canvas.drawText(
-                "Tap Anywhere",
+                "Tap Anywhere to Return",
                 SCREEN_W / 2f,
                 SCREEN_H / 2f + 80f,
                 subPaint
